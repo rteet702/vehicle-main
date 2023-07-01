@@ -5,8 +5,12 @@ datasource db {
   shadowDatabaseUrl = env("POSTGRES_URL_NON_POOLING") // used for migrations
 }
 
+generator client {
+    provider = "prisma-client-js"
+}
+
 model User {
     id Int @id @default(autoincrement())
-    usename String @unique
+    username String @unique
     password String
 }
