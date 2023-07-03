@@ -10,10 +10,19 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
     const data = await request.json();
 
-    if (!data.username || !data.password) {
+    if (!data.username || !data.password || !data.confirmPassword) {
         return NextResponse.json({
             error: "Please include both username and password.",
         });
+    }
+
+    if (data.confirmPassword !== data.password) {
+        return NextResponse.json(
+            {
+                error: "Passwords do not match.",
+            },
+            { status: 400 }
+        );
     }
 
     const pwHash = await hash(data.password, 10);
