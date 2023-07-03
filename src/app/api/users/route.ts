@@ -11,9 +11,12 @@ export async function POST(request: Request) {
     const data = await request.json();
 
     if (!data.username || !data.password || !data.confirmPassword) {
-        return NextResponse.json({
-            error: "Please include both username and password.",
-        });
+        return NextResponse.json(
+            {
+                error: "Please include both username and password.",
+            },
+            { status: 400 }
+        );
     }
 
     if (data.confirmPassword !== data.password) {
