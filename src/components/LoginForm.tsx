@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { hasCookie, setCookie } from "cookies-next";
 
 export default function LoginForm() {
@@ -9,6 +9,13 @@ export default function LoginForm() {
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const router = useRouter();
+
+    useEffect(() => {
+        const auth = hasCookie("userId");
+        if (auth) {
+            router.push("/dashboard");
+        }
+    }, []);
 
     const handleLogin = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -27,8 +34,6 @@ export default function LoginForm() {
 
         router.push("/dashboard");
     };
-
-    if (hasCookie("userId")) router.push("/dashboard");
 
     return (
         <form
