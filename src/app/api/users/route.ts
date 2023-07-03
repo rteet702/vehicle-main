@@ -4,7 +4,7 @@ import { hash } from "bcrypt";
 
 export async function GET(request: Request) {
     const users = await prisma.user.findMany();
-    return NextResponse.json({ users });
+    return NextResponse.json({ users }, { status: 200 });
 }
 
 export async function POST(request: Request) {
@@ -21,5 +21,5 @@ export async function POST(request: Request) {
     const newUser = await prisma.user.create({
         data: { username: data.username, password: pwHash },
     });
-    return NextResponse.json({ user: newUser });
+    return NextResponse.json({ user: newUser }, { status: 201 });
 }
