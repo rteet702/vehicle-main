@@ -1,15 +1,34 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
+import { hasCookie, setCookie } from "cookies-next";
 
 export default function LoginForm() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
+    const router = useRouter();
 
-    const handleLogin = (event: FormEvent<HTMLFormElement>) => {
+    const handleLogin = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        const response = await fetch("http://localhost:3000/api/users/login", {
+            method: "POST",
+            body: JSON.stringify({ username, password }),
+        });
+
+        if (!response.ok) {
+            return;
+        }
+
+        const data = await response.json();
+
+        setCookie("userId", data.userId);
+
+        router.push("/dashboard");
     };
+
+    if (hasCookie("userId")) router.push("/dashboard");
 
     return (
         <form
