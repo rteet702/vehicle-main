@@ -8,7 +8,9 @@ export async function GET(request: Request, context: { params: any }) {
         return NextResponse.json({ error: "Invalid userId" }, { status: 400 });
     }
 
-    const user = await prisma.user.findFirst({ where: { id: data.userId } });
+    const user = await prisma.user.findFirst({
+        where: { id: Number(data.id) },
+    });
 
     if (!user) {
         return NextResponse.json({ error: "User not found" }, { status: 404 });
