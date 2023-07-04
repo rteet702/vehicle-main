@@ -8,6 +8,9 @@ import LogoutButton from "./small/LogoutButton";
 interface IUser {
     id: number;
     username: string;
+    firstName: string;
+    lastName: string;
+    email: string;
 }
 
 export default function Dashboard() {
@@ -36,7 +39,7 @@ export default function Dashboard() {
 
     return (
         <section className="p-4 bg-white rounded-sm shadow-lg">
-            <h1>Hello {user?.username}</h1>
+            <h1>Hello {user?.firstName}!</h1>
             <LogoutButton />
         </section>
     );

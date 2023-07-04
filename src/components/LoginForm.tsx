@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 import { hasCookie, setCookie } from "cookies-next";
+import Link from "next/link";
 
 export default function LoginForm() {
     const [username, setUsername] = useState("");
@@ -71,7 +72,9 @@ export default function LoginForm() {
                 </button>
             </section>
             <hr className="my-4" />
-            <footer>Dont have a login? Contact Robert Teets.</footer>
+            <footer>
+                Dont have a login? <Link href="/register">Click Here!</Link>{" "}
+            </footer>
         </form>
     );
 }

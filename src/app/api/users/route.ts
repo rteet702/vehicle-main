@@ -10,10 +10,17 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
     const data = await request.json();
 
-    if (!data.username || !data.password || !data.confirmPassword) {
+    if (
+        !data.username ||
+        !data.password ||
+        !data.confirmPassword ||
+        !data.firstName ||
+        !data.lastName ||
+        !data.email
+    ) {
         return NextResponse.json(
             {
-                error: "Please include both username and password.",
+                error: "Please include all fields.",
             },
             { status: 400 }
         );
@@ -31,7 +38,13 @@ export async function POST(request: Request) {
     const pwHash = await hash(data.password, 10);
 
     const newUser = await prisma.user.create({
-        data: { username: data.username, password: pwHash },
+        data: {
+            username: data.username,
+            password: pwHash,
+            firstName: data.firstName,
+            lastName: data.lastName,
+            email: data.email,
+        },
     });
     return NextResponse.json({ user: newUser }, { status: 201 });
 }
