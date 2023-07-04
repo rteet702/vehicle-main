@@ -11,10 +11,37 @@ interface IUser {
     firstName: string;
     lastName: string;
     email: string;
+    createdAt: string;
+    updatedAt: string;
+}
+
+interface IVehicle {
+    id: number;
+    year: number;
+    make: string;
+    model: string;
+    nickname?: string;
+    trim?: string;
+    mileage: number;
+    workOrders: IWorkOrder[];
+    createdAt: string;
+    updatedAt: string;
+}
+
+interface IWorkOrder {
+    id: number;
+    vehicle: IVehicle;
+    description: string;
+    complete: boolean;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export default function Dashboard() {
     const [user, setUser] = useState<IUser>();
+    const [vehicles, setVehicles] = useState<IVehicle>();
+    const [workOrders, setWorkOrders] = useState<IWorkOrder[]>();
+
     const router = useRouter();
 
     useEffect(() => {
@@ -25,6 +52,8 @@ export default function Dashboard() {
 
         const userId = getCookie("userId");
         getUser(userId);
+        getVehicles();
+        getWorkOrders();
     }, []);
 
     async function getUser(id: CookieValueTypes) {
@@ -35,6 +64,24 @@ export default function Dashboard() {
 
         const userData = await response.json();
         setUser(userData.user);
+    }
+
+    async function getVehicles() {
+        const response = await fetch("http://localhost:3000/api/vehicles");
+        if (!response.ok) {
+            return;
+        }
+        const vehicleData = await response.json();
+        setVehicles(vehicleData.vehicles);
+    }
+
+    async function getWorkOrders() {
+        const response = await fetch("http://localhost:3000/api/workorders");
+        if (!response.ok) {
+            return;
+        }
+        const workOrderData = await response.json();
+        setWorkOrders(workOrderData.workOrders);
     }
 
     return (
@@ -52,10 +99,44 @@ export default function Dashboard() {
                 </ul>
             </nav>
             <section>
-                <h2 className="text-2xl">Pending Work Orders</h2>
-                <table>
-                    <thead></thead>
-                    <tbody></tbody>
+                <h2 className="my-2 text-2xl">Pending Work Orders</h2>
+                <table className="w-full p-1 border-b-2 rounded-sm border-neutral-200 bg-neutral-200">
+                    <thead>
+                        <tr>
+                            <th>Vehicle</th>
+                            <th>Nickname</th>
+                            <th>Description</th>
+                            <th>Complete?</th>
+                            <th>Created At?</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {workOrders &&
+                            workOrders.map((workOrder) => {
+                                const { year, make, model } = workOrder.vehicle;
+                                const vehicleText = `${year} ${make} ${model}`;
+                                const date = new Date(workOrder.createdAt);
+                                const dateString = date.toLocaleDateString();
+                                return (
+                                    <tr
+                                        key={workOrder.id}
+                                        className="text-center transition-colors even:bg-neutral-100 odd:bg-cyan-100"
+                                    >
+                                        <td>{vehicleText}</td>
+                                        <td>
+                                            {workOrder.vehicle.nickname
+                                                ? workOrder.vehicle.nickname
+                                                : "None"}
+                                        </td>
+                                        <td>{workOrder.description}</td>
+                                        <td>
+                                            {workOrder.complete ? "Yes" : "No"}
+                                        </td>
+                                        <td>{dateString}</td>
+                                    </tr>
+                                );
+                            })}
+                    </tbody>
                 </table>
             </section>
         </main>
