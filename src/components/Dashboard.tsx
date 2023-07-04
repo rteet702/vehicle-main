@@ -38,9 +38,26 @@ export default function Dashboard() {
     }
 
     return (
-        <section className="p-4 bg-white rounded-sm shadow-lg">
-            <h1>Hello {user?.firstName}!</h1>
-            <LogoutButton />
-        </section>
+        <main className="w-full p-4 bg-white rounded-sm shadow-lg lg:w-2/3">
+            <nav className="flex items-center justify-between">
+                <h1 className="text-3xl">Hello {user?.firstName}!</h1>
+                <ul>
+                    <button className="p-4 transition-colors border-b-2 bg-neutral-100 hover:bg-neutral-300">
+                        View Vehicles
+                    </button>
+                    <button className="p-4 transition-colors border-b-2 bg-neutral-100 hover:bg-cyan-300 hover:border-cyan-500">
+                        Add Work Order
+                    </button>
+                    <LogoutButton />
+                </ul>
+            </nav>
+            <section>
+                <h2 className="text-2xl">Pending Work Orders</h2>
+                <table>
+                    <thead></thead>
+                    <tbody></tbody>
+                </table>
+            </section>
+        </main>
     );
 }
